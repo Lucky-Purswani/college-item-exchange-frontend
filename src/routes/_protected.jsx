@@ -9,8 +9,9 @@ function ProtectedLayout() {
   const { data: user, isError } = useCurrentUser()
 
   // If query errored or returned null/undefined, user is not authenticated
-  if (isError || (!user && !localStorage.getItem('isLoggedIn'))) {
-    return <Navigate to="/login" replace />
+  if (isError || !user) {
+    window.location.href = '/login'
+    return null
   }
 
   return <Outlet />

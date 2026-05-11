@@ -138,8 +138,7 @@ function NewListingPage() {
           toast.success("Listing published successfully!")
           const newId = res?.data?.id
           setTimeout(() => {
-            if (newId) router.navigate({ to: '/listing/$id', params: { id: newId } })
-            else router.navigate({ to: '/my-listings' })
+            router.navigate({ to: '/my-listings' })
           }, 1200)
         },
         onError: (err) => {
