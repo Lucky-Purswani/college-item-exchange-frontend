@@ -14,7 +14,7 @@ export function useCurrentUser() {
   const clearUser = useAuthStore((s) => s.clearUser)
 
   const query = useQuery({
-    queryKey: ['me'],
+    queryKey: ['currentUser'],
     queryFn: async () => {
       // If the browser flag says we are logged out, instantly return null without hitting the API
       if (localStorage.getItem('isLoggedIn') !== 'true') {

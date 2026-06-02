@@ -53,7 +53,7 @@ function LoginPage() {
 
       if (user) {
         setUser(user)
-        queryClient.setQueryData(['me'], user)
+        queryClient.setQueryData(['currentUser'], user)
       }
 
       setIsExiting(true)

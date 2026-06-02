@@ -56,6 +56,7 @@ export default function ContactSellerModal({ listingId, listingTitle, open, onOp
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 disabled={isPending}
+                maxLength={1000}
               />
             </div>
 

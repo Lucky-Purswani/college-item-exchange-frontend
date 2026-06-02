@@ -95,11 +95,12 @@ function ListingsPage() {
               className="h-10 w-full appearance-none rounded-lg border border-stone-200 bg-stone-50 pl-9 pr-8 text-xs font-semibold uppercase tracking-wide text-stone-700 outline-none hover:bg-stone-100 transition-colors focus:border-stone-400"
             >
               <option value="ALL">All Categories</option>
-              <option value="BOOKS">Books</option>
+              <option value="TEXTBOOKS">Textbooks</option>
               <option value="ELECTRONICS">Electronics</option>
-              <option value="STATIONERY">Stationery</option>
               <option value="FURNITURE">Furniture</option>
-              <option value="CYCLE">Cycles</option>
+              <option value="TRANSPORTATION">Transportation</option>
+              <option value="STATIONERY">Stationery</option>
+              <option value="CLOTHING">Clothing</option>
               <option value="OTHER">Other</option>
             </select>
           </div>

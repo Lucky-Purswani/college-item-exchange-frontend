@@ -52,10 +52,15 @@ export default function ReportModal({ listingId, open, onOpenChange }) {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="reason" className="text-xs font-bold uppercase tracking-wider text-stone-600 flex items-center gap-1.5">
-                <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
-                Reason for reporting
-              </label>
+              <div className="flex items-center justify-between">
+                <label htmlFor="reason" className="text-xs font-bold uppercase tracking-wider text-stone-600 flex items-center gap-1.5">
+                  <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+                  Reason for reporting
+                </label>
+                <span className={`text-[10px] font-bold tabular-nums ${reason.length >= 500 ? 'text-red-500' : 'text-stone-400'}`}>
+                  {reason.length}/500
+                </span>
+              </div>
               <textarea
                 id="reason"
                 placeholder="e.g. This is a scam, inappropriate content, or duplicate post..."
@@ -63,6 +68,7 @@ export default function ReportModal({ listingId, open, onOpenChange }) {
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 disabled={isPending}
+                maxLength={500}
               />
             </div>
 

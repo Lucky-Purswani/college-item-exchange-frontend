@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { to: '/home', label: 'Home' },
   { to: '/listings', label: 'All Listings' },
   { to: '/my-listings', label: 'My Listings' },
+  { to: '/chat', label: 'Messages' },
   { to: '/profile', label: 'Profile' },
 ]
 

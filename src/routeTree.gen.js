@@ -20,6 +20,8 @@ import { Route as ProtectedListingIdEditRouteImport } from './routes/_protected/
 import { Route as ProtectedListingNewRouteImport } from './routes/_protected/listing/new'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as AdminDashboardRouteImport } from './routes/_admin/admin'
+import { Route as ProtectedChatIndexRouteImport } from './routes/_protected/chat/index'
+import { Route as ProtectedChatIdRouteImport } from './routes/_protected/chat/$id'
 
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
@@ -127,6 +129,18 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   getParentRoute: () => AdminRoute,
 })
 
+const ProtectedChatIndexRoute = ProtectedChatIndexRouteImport.update({
+  id: '/chat/',
+  path: '/chat/',
+  getParentRoute: () => ProtectedRoute,
+})
+
+const ProtectedChatIdRoute = ProtectedChatIdRouteImport.update({
+  id: '/chat/$id',
+  path: '/chat/$id',
+  getParentRoute: () => ProtectedRoute,
+})
+
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren({
   ProtectedHomeRoute,
   ProtectedListingsRoute,
@@ -137,6 +151,8 @@ const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren({
   ProtectedListingNewRoute,
   ProtectedProfileIndexRoute,
   ProtectedProfileEditRoute,
+  ProtectedChatIndexRoute,
+  ProtectedChatIdRoute,
 })
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren({

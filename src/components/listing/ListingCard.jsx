@@ -17,7 +17,7 @@ export function ListingCard({ listing }) {
     <Link
       to="/listing/$id"
       params={{ id: listing.id }}
-      className="group relative flex flex-col bg-white rounded-xl border border-stone-200 shadow-sm transition-all hover:shadow-md hover:border-stone-300 hover:-translate-y-0.5"
+      className="group relative flex flex-col bg-white rounded-xl border border-stone-200 shadow-sm transition-all hover:shadow-md hover:border-stone-300"
     >
       <div className="p-4 flex flex-col gap-3 flex-1">
         {/* Header */}

@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,11 +16,12 @@ export const Route = createFileRoute('/_protected/listing/new')({
 })
 
 const CATEGORIES = [
-  { value: 'BOOKS', label: '📚 Books' },
+  { value: 'TEXTBOOKS', label: '📚 Textbooks' },
   { value: 'ELECTRONICS', label: '💻 Electronics' },
-  { value: 'STATIONERY', label: '✏️ Stationery' },
   { value: 'FURNITURE', label: '🪑 Furniture' },
-  { value: 'CYCLE', label: '🚲 Cycle' },
+  { value: 'TRANSPORTATION', label: '🚲 Transportation' },
+  { value: 'STATIONERY', label: '✏️ Stationery' },
+  { value: 'CLOTHING', label: '👕 Clothing' },
   { value: 'OTHER', label: '📦 Other' },
 ]
 
@@ -29,7 +31,7 @@ const schema = z.object({
   price: z.coerce
     .number({ invalid_type_error: 'Enter a valid number' })
     .positive('Must be greater than 0'),
-  category: z.enum(['BOOKS', 'ELECTRONICS', 'STATIONERY', 'FURNITURE', 'CYCLE', 'OTHER'], {
+  category: z.enum(['TEXTBOOKS', 'ELECTRONICS', 'FURNITURE', 'TRANSPORTATION', 'STATIONERY', 'CLOTHING', 'OTHER'], {
     errorMap: () => ({ message: 'Select a category' }),
   }),
 })
@@ -81,6 +83,19 @@ function NewListingPage() {
   const [previews, setPreviews] = useState([])   // string[] (object URLs)
   const [dragOver, setDragOver] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [previewModalOpen, setPreviewModalOpen] = useState(false)
+  const [selectedPreviewIndex, setSelectedPreviewIndex] = useState(0)
+
+  useEffect(() => {
+    if (previewModalOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [previewModalOpen])
 
   const {
     register,
@@ -188,6 +203,7 @@ function NewListingPage() {
                 className={`w-full h-10 px-3 rounded-lg border text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-stone-900/15 focus:border-stone-900 ${
                   errors.title ? 'border-red-400 bg-red-50' : 'border-stone-200 bg-stone-50 focus:bg-white'
                 }`}
+                maxLength={100}
               />
               {errors.title && (
                 <p className="text-xs font-semibold text-red-500">{errors.title.message}</p>
@@ -253,37 +269,13 @@ function NewListingPage() {
                 className={`w-full px-3 py-2.5 rounded-lg border text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-stone-900/15 focus:border-stone-900 resize-none ${
                   errors.description ? 'border-red-400 bg-red-50' : 'border-stone-200 bg-stone-50 focus:bg-white'
                 }`}
+                maxLength={1000}
               />
               {errors.description && (
                 <p className="text-xs font-semibold text-red-500">{errors.description.message}</p>
               )}
             </div>
 
-            {/* Submit */}
-            <div className="flex items-center justify-end gap-3 pt-1">
-              <button
-                type="button"
-                onClick={() => router.history.back()}
-                className="h-10 px-5 rounded-lg border border-stone-200 text-sm font-semibold text-stone-600 hover:bg-stone-50 transition-colors"
-                disabled={isPending}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isPending || success}
-                className="h-10 px-7 rounded-lg bg-stone-900 text-white text-sm font-bold shadow-sm hover:bg-stone-800 active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <>
-                    <Upload className="h-4 w-4" />
-                    Post Listing
-                  </>
-                )}
-              </button>
-            </div>
           </div>
 
           {/* ── RIGHT COLUMN: image upload ── */}
@@ -336,7 +328,15 @@ function NewListingPage() {
                 <div className="grid grid-cols-3 gap-2">
                   {previews.map((src, i) => (
                     <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-stone-200 bg-stone-100 group">
-                      <img src={src} alt={`Preview ${i + 1}`} className="w-full h-full object-cover" />
+                      <img 
+                        src={src} 
+                        alt={`Preview ${i + 1}`} 
+                        className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity" 
+                        onClick={() => {
+                          setSelectedPreviewIndex(i);
+                          setPreviewModalOpen(true);
+                        }}
+                      />
                       {i === 0 && (
                         <span className="absolute top-1 left-1 text-[9px] font-bold bg-stone-900 text-white px-1.5 py-0.5 rounded-sm">
                           MAIN
@@ -374,7 +374,72 @@ function NewListingPage() {
           </div>
 
         </div>
+
+        {/* ── SUBMIT BUTTONS (AT BOTTOM) ── */}
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-8 mt-4 border-t border-stone-200">
+          <button
+            type="button"
+            onClick={() => router.history.back()}
+            className="w-full sm:w-auto h-11 px-6 rounded-xl border border-stone-200 text-sm font-semibold text-stone-600 hover:bg-stone-50 transition-colors"
+            disabled={isPending}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={isPending || success}
+            className="w-full sm:w-auto h-11 px-8 rounded-xl bg-stone-900 text-white text-sm font-bold shadow-sm hover:bg-stone-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                <Upload className="h-4 w-4" />
+                Post Listing
+              </>
+            )}
+          </button>
+        </div>
       </form>
+
+      {/* ── IMAGE PREVIEW MODAL ── */}
+      {previewModalOpen && previews.length > 0 && createPortal(
+        <div 
+          className="fixed inset-0 z-[100] bg-black h-screen w-screen flex flex-col items-center justify-center"
+          onClick={() => setPreviewModalOpen(false)}
+        >
+          <button 
+            onClick={() => setPreviewModalOpen(false)}
+            className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors p-2 z-[110]"
+          >
+            <X className="h-8 w-8" />
+          </button>
+          
+          <div className="relative w-full h-full flex items-center justify-center p-4 sm:p-12 lg:p-20">
+            <img 
+              src={previews[selectedPreviewIndex]} 
+              alt="Preview Modal" 
+              className="max-w-full max-h-full object-contain pointer-events-auto"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+
+          {previews.length > 1 && (
+            <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-3 z-[110]" onClick={(e) => e.stopPropagation()}>
+              {previews.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedPreviewIndex(i)}
+                  className={`w-2.5 h-2.5 rounded-full transition-all ${
+                    i === selectedPreviewIndex ? 'bg-white scale-125' : 'bg-white/30 hover:bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </div>,
+        document.body
+      )}
     </PageShell>
   )
 }

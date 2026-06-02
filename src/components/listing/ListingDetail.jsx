@@ -1,11 +1,11 @@
 import React, { memo, useState, useCallback } from "react"
-import { Tag, ShieldCheck, Flag, Trash2, ChevronLeft, ChevronRight, CheckCircle2, Pencil } from "lucide-react"
+import { Tag, ShieldCheck, Flag, Trash2, ChevronLeft, ChevronRight, CheckCircle2, Pencil, Loader2 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { useAdminDeleteListing } from "@/hooks/useAdmin"
 import { useRouter, Link } from "@tanstack/react-router"
 import ReportModal from "@/components/common/ReportModal"
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog"
-import ContactSellerModal from "@/components/contact/ContactSellerModal"
+import { useCreateInteraction } from "@/hooks/useConversations"
 import { toast } from 'sonner'
 
 const formatPrice = (price) => {
@@ -30,8 +30,17 @@ export const ListingDetail = memo(function ListingDetail({ listing }) {
   
   const [reportModalOpen, setReportModalOpen] = useState(false)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
-  const [contactModalOpen, setContactModalOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
+  const { mutateAsync: createInteraction, isPending: isStartingChat } = useCreateInteraction()
+
+  const handleContactSeller = async () => {
+    try {
+      const interaction = await createInteraction(listing.id)
+      router.navigate({ to: '/chat/$id', params: { id: interaction.id } })
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not start conversation')
+    }
+  }
 
   const { mutate: adminDelete, isPending: isAdminDeleting } = useAdminDeleteListing()
 
@@ -80,7 +89,6 @@ export const ListingDetail = memo(function ListingDetail({ listing }) {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
       {/* Modals */}
       <ReportModal listingId={listing.id} open={reportModalOpen} onOpenChange={setReportModalOpen} />
-      <ContactSellerModal listingId={listing.id} listingTitle={listing.title} open={contactModalOpen} onOpenChange={setContactModalOpen} />
       <ConfirmDialog
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
@@ -254,11 +262,17 @@ export const ListingDetail = memo(function ListingDetail({ listing }) {
             </Link>
           ) : (
             <button
-              className="w-full h-12 rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed bg-stone-900 text-white hover:bg-stone-800"
-              disabled={listing.status !== 'ACTIVE'}
-              onClick={() => setContactModalOpen(true)}
+              className="w-full h-12 rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed bg-stone-900 text-white hover:bg-stone-800"
+              disabled={listing.status !== 'ACTIVE' || isStartingChat}
+              onClick={handleContactSeller}
             >
-              {listing.status !== 'ACTIVE' ? "Listing Unavailable" : "Contact Seller"}
+              {isStartingChat ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : listing.status !== 'ACTIVE' ? (
+                'Listing Unavailable'
+              ) : (
+                'Contact Seller'
+              )}
             </button>
           )}
 
