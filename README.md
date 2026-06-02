@@ -1,4 +1,4 @@
-# Needly — College Item Exchange Platform
+# Needly
 
 Needly is a premium, secure, and performant marketplace designed specifically for college students to buy and sell items within their campus ecosystem.
 
@@ -10,7 +10,7 @@ The platform bridges the gap between students looking for affordable campus esse
 
 ## 🛠 Tech Stack
 
-### Frontend (`/needle-frontend`)
+### Frontend
 - **Core**: React 18 + Vite
 - **Routing**: TanStack Router (Type-safe, file-based routing)
 - **State Management**: Zustand (Auth & UI state)
@@ -19,7 +19,7 @@ The platform bridges the gap between students looking for affordable campus esse
 - **Animations**: Custom CSS Keyframes (Fluid page transitions)
 - **Icons**: Lucide React
 
-### Backend (`/backend`)
+### Backend
 - **Runtime**: Node.js (Express.js)
 - **ORM**: Prisma
 - **Database**: PostgreSQL
