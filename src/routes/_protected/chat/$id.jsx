@@ -29,7 +29,20 @@ function ChatRoomPage() {
 
   const [input, setInput] = useState('')
   const [typingTimeout, setTypingTimeout] = useState(null)
+  const [navbarHeight, setNavbarHeight] = useState(64)
   const bottomRef = useRef(null)
+
+  // Dynamically measure the real navbar height to anchor the chat container
+  useEffect(() => {
+    const navbar = document.getElementById('app-navbar')
+    if (!navbar) return
+    setNavbarHeight(navbar.getBoundingClientRect().height)
+    const observer = new ResizeObserver((entries) => {
+      setNavbarHeight(entries[0].contentRect.height)
+    })
+    observer.observe(navbar)
+    return () => observer.disconnect()
+  }, [])
 
   // Find current conversation metadata from the inbox cache
   const conversation = conversationsData?.data?.find((c) => c.id === interactionId)
@@ -104,8 +117,12 @@ function ChatRoomPage() {
   }
 
   return (
-    // Full-height layout: header + scrollable messages + input bar
-    <div className="flex flex-col max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8" style={{ height: 'calc(100dvh - 65px)' }}>
+    // Fixed positioning below navbar to prevent mobile scroll shifts
+    <div
+      className="fixed inset-x-0 bottom-0 flex flex-col bg-stone-50"
+      style={{ top: `${navbarHeight}px` }}
+    >
+      <div className="flex flex-col max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 h-full">
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-3 py-4 border-b border-stone-200 shrink-0">
@@ -141,7 +158,9 @@ function ChatRoomPage() {
       </div>
 
       {/* ── Messages ───────────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto py-4 space-y-3 scroll-smooth">
+      <div className={`flex-1 py-4 space-y-3 ${
+        messages.length > 0 ? 'overflow-y-auto scroll-smooth' : 'overflow-hidden'
+      }`}>
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center gap-2 py-12">
             <p className="text-2xl">👋</p>
@@ -199,6 +218,7 @@ function ChatRoomPage() {
           Press <kbd className="px-1 py-0.5 rounded bg-stone-100 text-stone-500 text-[10px] font-mono">Enter</kbd> to send · <kbd className="px-1 py-0.5 rounded bg-stone-100 text-stone-500 text-[10px] font-mono">Shift+Enter</kbd> for new line
         </p>
       </div>
+    </div>
     </div>
   )
 }
