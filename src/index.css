@@ -97,7 +97,16 @@
 
   html {
     @apply font-sans;
-    scrollbar-gutter: stable;
+    /* overflow-y: scroll prevents layout shifts when pages transition between
+       scrollable/non-scrollable. scrollbar-width: none hides the page-level
+       scrollbar so there is no empty gutter space. Inner div scrollbars
+       (e.g. chat messages) are unaffected and still use the styles below. */
+    overflow-y: scroll;
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none; /* Chrome/Safari: hide page-level scrollbar only */
   }
 
   /* Chrome, Edge, and Safari */
