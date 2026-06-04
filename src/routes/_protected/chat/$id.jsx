@@ -158,7 +158,7 @@ function ChatRoomPage() {
       </div>
 
       {/* ── Messages ───────────────────────────────────────────────────────── */}
-      <div className={`flex-1 py-4 space-y-3 ${
+      <div className={`chat-scrollbar flex-1 py-1 space-y-2 ${
         messages.length > 0 ? 'overflow-y-auto scroll-smooth' : 'overflow-hidden'
       }`}>
         {messages.length === 0 ? (

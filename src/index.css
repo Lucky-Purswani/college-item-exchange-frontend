@@ -131,6 +131,14 @@
     background-clip: content-box;
   }
 
+  /* Chat messages area: fully invisible scrollbar, content still scrollable */
+  .chat-scrollbar {
+    scrollbar-width: none; /* Firefox */
+  }
+  .chat-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
   @keyframes fade-in {
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
