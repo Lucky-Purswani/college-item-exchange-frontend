@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Loader2, ShieldAlert, AlertTriangle } from 'lucide-react'
 import { useCreateReport } from '@/hooks/useReport'
 import { toast } from 'sonner'
@@ -7,6 +8,22 @@ export default function ReportModal({ listingId, open, onOpenChange }) {
   const [reason, setReason] = useState('')
   
   const { mutate: createReport, isPending } = useCreateReport()
+
+  // Lock scroll when dialog is open
+  useEffect(() => {
+    if (open) {
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+      };
+    }
+  }, [open]);
 
   if (!open) return null
 
@@ -33,8 +50,8 @@ export default function ReportModal({ listingId, open, onOpenChange }) {
     )
   }
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
       <div 
         className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
@@ -96,6 +113,7 @@ export default function ReportModal({ listingId, open, onOpenChange }) {
           </form>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

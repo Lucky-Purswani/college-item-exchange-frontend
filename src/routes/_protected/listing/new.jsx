@@ -10,6 +10,7 @@ import {
 import { PageShell } from '@/components/layout/PageShell'
 import { useCreateListing } from '@/hooks/useListings'
 import { toast } from 'sonner'
+import { useSwipeable } from 'react-swipeable'
 
 export const Route = createFileRoute('/_protected/listing/new')({
   component: NewListingPage,
@@ -88,14 +89,25 @@ function NewListingPage() {
 
   useEffect(() => {
     if (previewModalOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-    return () => {
-      document.body.style.overflow = 'unset'
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+      };
     }
   }, [previewModalOpen])
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => previews.length > 1 && setSelectedPreviewIndex((i) => (i === previews.length - 1 ? 0 : i + 1)),
+    onSwipedRight: () => previews.length > 1 && setSelectedPreviewIndex((i) => (i === 0 ? previews.length - 1 : i - 1)),
+    preventScrollOnSwipe: true,
+    trackMouse: true
+  })
 
   const {
     register,
@@ -415,11 +427,11 @@ function NewListingPage() {
             <X className="h-8 w-8" />
           </button>
           
-          <div className="relative w-full h-full flex items-center justify-center p-4 sm:p-12 lg:p-20">
+          <div {...swipeHandlers} className="relative w-full h-full flex items-center justify-center p-4 sm:p-12 lg:p-20">
             <img 
               src={previews[selectedPreviewIndex]} 
               alt="Preview Modal" 
-              className="max-w-full max-h-full object-contain pointer-events-auto"
+              className="max-w-full max-h-full object-contain pointer-events-none select-none"
               onClick={(e) => e.stopPropagation()}
             />
           </div>
