@@ -27,7 +27,7 @@ function RootLayout() {
     )
   }
 
-  const isPublicRoute = ['/', '/login', '/register', '/forgot-password', '/reset-password'].includes(location.pathname)
+  const isPublicRoute = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/verify-email'].includes(location.pathname)
   const showPublicBg = !user && isPublicRoute
 
   return (
