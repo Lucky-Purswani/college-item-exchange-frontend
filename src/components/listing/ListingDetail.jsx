@@ -7,6 +7,7 @@ import ReportModal from "@/components/common/ReportModal"
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog"
 import { useCreateInteraction } from "@/hooks/useConversations"
 import { toast } from 'sonner'
+import { useSwipeable } from 'react-swipeable'
 
 const formatPrice = (price) => {
   return new Intl.NumberFormat('en-IN', {
@@ -63,6 +64,13 @@ export const ListingDetail = memo(function ListingDetail({ listing }) {
     [images.length]
   )
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => images.length > 1 && next(),
+    onSwipedRight: () => images.length > 1 && prev(),
+    preventScrollOnSwipe: true,
+    trackMouse: true
+  })
+
   const handleAdminDelete = () => setIsConfirmOpen(true)
 
   const onConfirmDelete = () => {
@@ -102,11 +110,14 @@ export const ListingDetail = memo(function ListingDetail({ listing }) {
 
       {/* ── LEFT: Image carousel ── */}
       <div className="space-y-4">
-        <div className="relative aspect-square overflow-hidden rounded-2xl bg-stone-100 group border border-stone-200 shadow-sm">
+        <div 
+          {...swipeHandlers}
+          className="relative aspect-square overflow-hidden rounded-2xl bg-stone-100 group border border-stone-200 shadow-sm"
+        >
           <img
             src={images[activeIndex]}
             alt={listing.title}
-            className="object-cover w-full h-full transition-opacity duration-300"
+            className="object-cover w-full h-full transition-opacity duration-300 pointer-events-none select-none"
           />
           {images.length > 1 && (
             <>

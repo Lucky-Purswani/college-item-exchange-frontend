@@ -9,6 +9,7 @@ import { PageShell } from '@/components/layout/PageShell'
 import { useAuth } from '@/hooks/useAuth'
 import { useListing, useUpdateListing } from '@/hooks/useListings'
 import { PageLoader } from '@/components/loading'
+import { useSwipeable } from 'react-swipeable'
 
 export const Route = createFileRoute('/_protected/listing/$id/edit')({
   component: EditListingPage,
@@ -50,14 +51,25 @@ function EditListingPage() {
 
   useEffect(() => {
     if (previewModalOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-    return () => {
-      document.body.style.overflow = 'unset'
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+      };
     }
   }, [previewModalOpen])
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => listing?.imageUrls?.length > 1 && setSelectedPreviewIndex((i) => (i === listing.imageUrls.length - 1 ? 0 : i + 1)),
+    onSwipedRight: () => listing?.imageUrls?.length > 1 && setSelectedPreviewIndex((i) => (i === 0 ? listing.imageUrls.length - 1 : i - 1)),
+    preventScrollOnSwipe: true,
+    trackMouse: true
+  })
 
   const {
     register,
@@ -345,11 +357,11 @@ function EditListingPage() {
             <X className="h-8 w-8" />
           </button>
           
-          <div className="relative w-full h-full flex items-center justify-center p-4 sm:p-12 lg:p-20">
+          <div {...swipeHandlers} className="relative w-full h-full flex items-center justify-center p-4 sm:p-12 lg:p-20">
             <img 
               src={listing.imageUrls[selectedPreviewIndex]} 
               alt="Preview Modal" 
-              className="max-w-full max-h-full object-contain pointer-events-auto"
+              className="max-w-full max-h-full object-contain pointer-events-none select-none"
               onClick={(e) => e.stopPropagation()}
             />
           </div>
