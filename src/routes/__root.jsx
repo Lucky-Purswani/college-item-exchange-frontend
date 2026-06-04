@@ -21,7 +21,7 @@ function RootLayout() {
   // Only show the full-screen loader until the absolute first auth check finishes
   if (!isFetched) {
     return (
-      <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center text-stone-900">
+      <div className="min-h-[100svh] bg-stone-50 flex flex-col items-center justify-center text-stone-900">
         <div className="h-6 w-6 rounded-full border-2 border-stone-200 border-t-stone-900 animate-spin" />
       </div>
     )
@@ -33,7 +33,7 @@ function RootLayout() {
   return (
     <>
       <div className={cn(
-        "min-h-screen flex flex-col relative transition-colors duration-500 animate-fade-in",
+        "min-h-[100svh] flex flex-col relative transition-colors duration-500 animate-fade-in",
         showPublicBg 
           ? "bg-[#fdfbf7] bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" 
           : "bg-stone-50"
