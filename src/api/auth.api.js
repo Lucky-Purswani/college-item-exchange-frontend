@@ -70,3 +70,12 @@ export const changePassword = async (data) => {
   const res = await api.patch('/auth/change-password', data)
   return res.data
 }
+
+/**
+ * Verify email using the token from the verification email link
+ * @param {string} token
+ */
+export const verifyEmail = async (token) => {
+  const res = await api.post(`/auth/verify-email?token=${token}`)
+  return res.data
+}
