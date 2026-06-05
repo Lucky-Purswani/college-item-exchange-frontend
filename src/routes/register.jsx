@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PageShell } from '@/components/layout/PageShell'
+import logo1 from '@/assets/logo1.jpg'
 
 const registerSchema = z
   .object({
@@ -60,8 +61,12 @@ function RegisterPage() {
       <div className="relative z-10 w-full max-w-md my-auto">
         {/* Header */}
         <div className="text-center mb-4">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-stone-900 shadow-md mb-4">
-            <span className="text-white font-bold text-lg">N</span>
+          <div className="inline-flex h-14 w-14 overflow-hidden items-center justify-center mix-blend-multiply mb-4">
+            <img 
+              src={logo1} 
+              alt="Needly Logo" 
+              className="w-full h-full object-cover scale-[1.4]"
+            />
           </div>
           <h1 className="text-2xl font-bold text-stone-900">Create an account</h1>
           <p className="text-stone-500 mt-1 text-sm">Join using your college email</p>
