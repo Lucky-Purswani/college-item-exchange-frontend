@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import logo1 from '@/assets/logo1.jpg'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { LogOut, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
@@ -52,17 +53,21 @@ export function Navbar() {
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-stone-900 shadow-sm transition-transform group-hover:scale-105">
-            <span className="text-white font-bold text-sm">N</span>
+        <Link to="/" className="flex items-center group transition-transform hover:scale-105 duration-300">
+          <div className="h-12 w-12 overflow-hidden flex items-center justify-center mix-blend-multiply">
+            <img 
+              src={logo1} 
+              alt="Needly Logo" 
+              className="w-full h-full object-cover scale-[1.4]"
+            />
           </div>
-          <span className="text-stone-900 font-bold text-lg tracking-tight">
+          <span className="text-stone-800 font-extrabold text-xl tracking-tight drop-shadow-sm">
             Needly
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-0.5 lg:gap-1">
           {isAuthenticated ? (
             NAV_LINKS.map(({ to, label }) => {
               const isActive = currentPath === to || currentPath.startsWith(to + '/')
@@ -71,7 +76,7 @@ export function Navbar() {
                   key={to}
                   to={to}
                   className={[
-                    'px-3 py-1.5 rounded-md text-sm font-medium transition-all',
+                    'px-2 py-1.5 lg:px-3 lg:py-1.5 rounded-md text-xs lg:text-sm font-medium transition-all',
                     isActive
                       ? 'bg-stone-100 text-stone-900'
                       : 'text-stone-500 hover:text-stone-900 hover:bg-stone-50',
@@ -100,7 +105,7 @@ export function Navbar() {
             <Link
               to="/admin"
               className={[
-                'px-3 py-1.5 rounded-md text-sm font-medium transition-all ml-2 border border-stone-200',
+                'px-2 py-1.5 lg:px-3 lg:py-1.5 rounded-md text-xs lg:text-sm font-medium transition-all ml-1 lg:ml-2 border border-stone-200',
                 currentPath.startsWith('/admin')
                   ? 'bg-stone-900 text-white border-stone-900'
                   : 'text-stone-700 hover:text-stone-900 hover:bg-stone-50 bg-white shadow-sm',
@@ -118,12 +123,12 @@ export function Navbar() {
               id="navbar-logout-btn"
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium text-stone-500 hover:text-red-600 hover:bg-red-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1 lg:gap-2 px-2 py-1.5 lg:px-3 lg:py-1.5 rounded-md text-xs lg:text-sm font-medium text-stone-500 hover:text-red-600 hover:bg-red-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoggingOut ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-3.5 w-3.5 lg:h-4 lg:w-4 animate-spin" />
               ) : (
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
               )}
               Logout
             </button>
