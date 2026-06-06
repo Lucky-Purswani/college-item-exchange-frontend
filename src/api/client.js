@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useAuthStore } from '@/store/auth.store'
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.PROD ? '/backend' : import.meta.env.VITE_API_URL,
   withCredentials: true,
 })
 
@@ -25,7 +25,7 @@ api.interceptors.response.use(
   async (error) => {
     const original = error.config
     // Do not intercept if it's the refresh route itself to prevent recursive loops
-    if (error.response?.status === 401 && !original._retry && original.url !== '/auth/refresh') {
+    if (error.response?.status === 401 && !original._retry && !original.url?.includes('/auth/refresh')) {
       if (isRefreshing) {
         return new Promise(function (resolve, reject) {
           failedQueue.push({ resolve, reject })
