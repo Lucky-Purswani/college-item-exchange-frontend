@@ -17,13 +17,13 @@ export const Route = createFileRoute('/_protected/listing/new')({
 })
 
 const CATEGORIES = [
-  { value: 'TEXTBOOKS', label: '📚 Textbooks' },
-  { value: 'ELECTRONICS', label: '💻 Electronics' },
-  { value: 'FURNITURE', label: '🪑 Furniture' },
-  { value: 'TRANSPORTATION', label: '🚲 Transportation' },
-  { value: 'STATIONERY', label: '✏️ Stationery' },
-  { value: 'CLOTHING', label: '👕 Clothing' },
-  { value: 'OTHER', label: '📦 Other' },
+  { value: 'TEXTBOOKS', label: 'Textbooks' },
+  { value: 'ELECTRONICS', label: 'Electronics' },
+  { value: 'FURNITURE', label: 'Furniture' },
+  { value: 'TRANSPORTATION', label: 'Transportation' },
+  { value: 'STATIONERY', label: 'Stationery' },
+  { value: 'CLOTHING', label: 'Clothing' },
+  { value: 'OTHER', label: 'Other' },
 ]
 
 const schema = z.object({
