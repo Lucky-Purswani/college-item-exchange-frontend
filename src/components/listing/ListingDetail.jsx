@@ -75,7 +75,7 @@ export const ListingDetail = memo(function ListingDetail({ listing }) {
 
   const onConfirmDelete = () => {
     adminDelete(
-      { id: listing.id },
+      listing.id,
       {
         onSuccess: () => { 
           setIsConfirmOpen(false)
